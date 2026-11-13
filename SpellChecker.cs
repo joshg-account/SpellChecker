@@ -17,10 +17,11 @@ public class Program
         string EnglishWordsAddress = Path.Combine(Directory.GetCurrentDirectory(),"words_alpha.txt");
         foreach(string line in File.ReadLines(EnglishWordsAddress)) 
         {
-            EnglishWords.Add(line, 0);
+            if (line != "") EnglishWords.Add(line.ToLower(), 0);
         }
-        Console.WriteLine("Uploaded English Words to dictionairy");
-        string checking = "hellp".ToLower();
+        Console.WriteLine("Uploaded English Words to dictionary");
+        Console.Write("What word would you like to test?\n>> ");
+        string checking = Console.ReadLine().ToLower();
         if (EnglishWords.ContainsKey(checking)) Console.WriteLine("'" + checking + "' is already spelled correctly!");
         else
         {
@@ -35,21 +36,15 @@ public class Program
             var EnglishWordsAnswer = EnglishWords.MinBy(pair => pair.Value);
             int minVal = EnglishWordsAnswer.Value;
             List<string> closeWords = new List<string>();
-            foreach (var value in EnglishWords.OrderBy(pair => pair.Value))
+            foreach (var value in EnglishWords.Where(pair => pair.Value == minVal))
             {
-                if (value.Value != minVal)
-                {
-                    break;
-                }
-                else
-                {
-                    closeWords.Add(value.Key);
-                }
+                closeWords.Add(value.Key);
             }
             foreach(string word in closeWords)
             {
                 Console.WriteLine(word);    
             }
+            if (closeWords.Count == 0) Console.WriteLine("No suggestions found.");
         }
         
     }
@@ -67,12 +62,7 @@ public class Program
 
         for (int i = 1; i <= a.Length; i++)
         {
-            for (int j = 1; j <= b.Length; j++)
-            {
-                int substitutionCost = 0;
-                if (a[i - 1] != b[j - 1]) 
-                {
-                    (int col, int row)? keyPos = null;
+            (int col, int row)? keyPos = null;
                     for (int row = 0; row < 4; row++)
                     {
                         for (int column = 0; column < 11; column++)
@@ -80,6 +70,11 @@ public class Program
                             if (qwertyKeyboard[column, row] == a[i - 1]) keyPos = (column, row);
                         }
                     }
+            for (int j = 1; j <= b.Length; j++)
+            {
+                int substitutionCost = 0;
+                if (a[i - 1] != b[j - 1]) 
+                {
                     if (keyPos != null)
                     {
                         int c = keyPos.Value.col;
@@ -123,11 +118,11 @@ public class Program
     static char[,] BuildQwertyKeyboard()
     {
         char[,] keyboard = new char[11, 4];
-        string[] rows = {"1234567890-", "qwertyuiop[", "asdfghjkl;'", @"zxcvbnm,.//" };
+        string[] rows = {"1234567890-", "qwertyuiop[", "asdfghjkl;'", @"zxcvbnm,./" };
 
         for (int row = 0; row < 4; row++)
         {
-            for (int column = 0; column < 11; column++)
+            for (int column = 0; column < rows[row].Length; column++)
             {
                 keyboard[column, row] = rows[row][column];
             }
