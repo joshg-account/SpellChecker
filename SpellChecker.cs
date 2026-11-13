@@ -9,10 +9,17 @@ namespace SpellChecker;
 public class Program
 {
     public static char[,] qwertyKeyboard;
+    public static List<string> MostCommonEnglishWords;
 
     public static void Main(string[] args)
     {
         qwertyKeyboard = BuildQwertyKeyboard();
+        MostCommonEnglishWords = new List<string>();
+        string MostCommonEnglishWordsAddress = Path.Combine(Directory.GetCurrentDirectory(),"1000-most-common-words.txt");
+        foreach(string line in File.ReadLines(MostCommonEnglishWordsAddress)) 
+        {
+            if (line != "") MostCommonEnglishWords.Add(line.ToLower());
+        }
         Dictionary<string, int> EnglishWords = new Dictionary<string, int>();
         string EnglishWordsAddress = Path.Combine(Directory.GetCurrentDirectory(),"words_alpha.txt");
         foreach(string line in File.ReadLines(EnglishWordsAddress)) 
@@ -39,10 +46,7 @@ public class Program
             foreach (var value in EnglishWords.Where(pair => pair.Value == minVal))
             {
                 closeWords.Add(value.Key);
-            }
-            foreach(string word in closeWords)
-            {
-                Console.WriteLine(word);    
+                Console.WriteLine(value.Key);
             }
             if (closeWords.Count == 0) Console.WriteLine("No suggestions found.");
         }
@@ -103,7 +107,7 @@ public class Program
                     int transposition = table[i - 2, j - 2] + 1;
                     best = Math.Min(best, transposition);
                 }
-
+                if (!MostCommonEnglishWords.Contains(b)) best++;
                 table[i, j] = best;
             }
             int rowMin = int.MaxValue;
