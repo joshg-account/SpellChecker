@@ -20,14 +20,30 @@ public class Program
         {
             foreach (string alt in EnglishWords.Keys)
             {
-                if (alt.Length < checking.Length + 2 || alt.Length > checking.Length - 2)
+                if (alt.Length <= checking.Length + 2 && alt.Length >= checking.Length - 2)
                 {
                     EnglishWords[alt] = Distance(checking, alt);
                 }
                 else EnglishWords[alt] = 100;
             }
             var EnglishWordsAnswer = EnglishWords.MinBy(pair => pair.Value);
-            Console.WriteLine(EnglishWordsAnswer);    
+            int minVal = EnglishWordsAnswer.Value;
+            List<string> closeWords = new List<string>();
+            foreach (var value in EnglishWords.OrderBy(pair => pair.Value))
+            {
+                if (value.Value != minVal)
+                {
+                    break;
+                }
+                else
+                {
+                    closeWords.Add(value.Key);
+                }
+            }
+            foreach(string word in closeWords)
+            {
+                Console.WriteLine(word);    
+            }
         }
         
     }
