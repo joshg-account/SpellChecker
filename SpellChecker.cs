@@ -34,6 +34,7 @@ public class Program
         Console.Write("What word would you like to test?\n>> ");
         string checking = Console.ReadLine().Trim().ToLower();
         if (checking == "") Console.WriteLine("Do not enter empty space.");
+        else if (MostCommonEnglishWords.Contains(checking)) Console.WriteLine("'" + checking + "' is already spelled correctly!");
         else if (EnglishWords.ContainsKey(checking)) Console.WriteLine("'" + checking + "' is already spelled correctly!");
         else
         {
